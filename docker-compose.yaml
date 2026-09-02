@@ -1,6 +1,6 @@
 services:
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:3.3.2
     container_name: loki
     restart: unless-stopped
     ports:
@@ -9,7 +9,7 @@ services:
       - 9095
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:2.7.2
     container_name: tempo
     restart: unless-stopped
     command: ["-config.file=/etc/tempo.yaml"]
@@ -17,7 +17,7 @@ services:
       - ./config/tempo/tempo.yaml:/etc/tempo.yaml
 
   mimir:
-    image: grafana/mimir:latest
+    image: grafana/mimir:2.14.3
     container_name: mimir
     restart: unless-stopped
     ports:
@@ -27,7 +27,7 @@ services:
       - ./config/mimir/mimir.yaml:/etc/mimir.yaml
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.4.0
     container_name: grafana
     restart: unless-stopped
     ports:
@@ -44,7 +44,7 @@ services:
       - tempo
 
   promtail:
-    image: grafana/promtail:latest
+    image: grafana/promtail:3.3.2
     container_name: promtail
     restart: unless-stopped
     command: ["-config.file=/etc/promtail/config.yaml"]

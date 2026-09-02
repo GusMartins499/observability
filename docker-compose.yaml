@@ -13,6 +13,9 @@ services:
     container_name: tempo
     restart: unless-stopped
     command: ["-config.file=/etc/tempo.yaml"]
+    ports:
+      - 4327:4317
+      - 4328:4318
     volumes:
       - ./config/tempo/tempo.yaml:/etc/tempo.yaml
 
@@ -42,6 +45,24 @@ services:
     depends_on:
       - loki
       - tempo
+      - mimir
+
+  otel:
+    image: otel/opentelemetry-collector:0.116.1
+    container_name: otel
+    restart: unless-stopped
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 8888:8888
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./config/otel/otel.yaml:/etc/otelcol/config.yaml
+    depends_on:
+      - loki
+      - tempo
+      - mimir
+      - grafana
 
   promtail:
     image: grafana/promtail:3.3.2

@@ -70,4 +70,5 @@ services:
     restart: unless-stopped
     command: ["-config.file=/etc/promtail/config.yaml"]
     volumes:
+      - ./config/promtail/config.yaml:/etc/promtail/config.yaml
       - /var/log:/var/log

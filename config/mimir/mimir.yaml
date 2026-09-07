@@ -1,6 +1,6 @@
 multitenancy_enabled: false
 
-block_storage:
+blocks_storage:
   backend: filesystem
   bucket_store:
     sync_dir: /tmp/mimir/tsdb-sync
@@ -32,6 +32,6 @@ server:
   http_listen_port: 9090
   log_level: error
 
-storage_gateway:
+store_gateway:
   sharding_ring:
     replication_factor: 1

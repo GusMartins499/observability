@@ -18,12 +18,12 @@ processors:
     resource:
       attributes:
         - action: insert
-          key: loki.resource, labels
-          value: service.name, service.environment
+          key: loki.resource.labels
+          value: service.name,service.environment,service.version
 
 exporters:
   otlphttp/loki:
-    endpoint: http://loki:3100/otlp/v1/logs
+    endpoint: http://loki:3100/otlp
     tls:
       insecure: true
   otlp/traces:

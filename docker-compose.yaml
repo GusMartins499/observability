@@ -13,9 +13,10 @@ services:
     container_name: tempo
     restart: unless-stopped
     command: ["-config.file=/etc/tempo.yaml"]
-    ports:
-      - 4327:4317
-      - 4328:4318
+    expose:
+      - 3200
+      - 4317
+      - 4318
     volumes:
       - ./config/tempo/tempo.yaml:/etc/tempo.yaml
 
@@ -24,10 +25,21 @@ services:
     container_name: mimir
     restart: unless-stopped
     ports:
-      - 9090:9090
+      - 9008:9008
+      - 9009:9009
     command: ["-config.file=/etc/mimir.yaml"]
     volumes:
       - ./config/mimir/mimir.yaml:/etc/mimir.yaml
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+    command: ['--web.enable-remote-write-receiver', '--config.file=/etc/prometheus/prometheus.yaml']
+    volumes:
+      - ./config/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
 
   grafana:
     image: grafana/grafana:11.4.0
@@ -44,6 +56,7 @@ services:
       - ./config/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     depends_on:
       - loki
+      - prometheus
       - tempo
       - mimir
 
@@ -52,15 +65,20 @@ services:
     container_name: otel
     restart: unless-stopped
     ports:
-      - 4317:4317
-      - 4318:4318
-      - 8888:8888
+      - 4317:4317 # OTLP gRPC
+      - 4318:4318 # OTLP HTTP
+      - 8888:8888 # prometheus-collector
+      - 8889:8889 # prometheus-exporter
+      - 1888:1888 # pprof
+      - 13133:13133 # health-check
+      - 55679:55679 # zpages
     command: ["--config=/etc/otelcol/config.yaml"]
     volumes:
       - ./config/otel/otel.yaml:/etc/otelcol/config.yaml
     depends_on:
       - loki
       - tempo
+      - prometheus
       - mimir
       - grafana
 

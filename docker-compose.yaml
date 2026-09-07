@@ -1,4 +1,17 @@
 services:
+  api:
+    build:
+      context: ./api
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    environment:
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel:4318/v1/traces
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel:4317
+    depends_on:
+      - otel
+
   loki:
     image: grafana/loki:3.3.2
     container_name: loki

@@ -8,14 +8,17 @@ import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
+import {
+  diag,
+  DiagConsoleLogger,
+  DiagLogLevel,
+  metrics,
+} from '@opentelemetry/api';
 
 const SERVICE_NAME = 'api-service';
 
 const traceExporter = new OTLPTraceExporter();
-const metricsExporter = new OTLPMetricExporter({
-  url: 'http://127.0.0.1:4317',
-});
+const metricsExporter = new OTLPMetricExporter();
 const metricReader = new PeriodicExportingMetricReader({
   exporter: metricsExporter,
   exportIntervalMillis: 10_000,
@@ -39,4 +42,4 @@ const sdk = new NodeSDK({
 
 sdk.start();
 
-export default sdk;
+export { sdk, metrics };

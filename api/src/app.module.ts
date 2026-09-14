@@ -8,14 +8,17 @@ import { AppService } from './app.service';
     LoggerModule.forRoot({
       pinoHttp: {
         level: 'debug',
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-            translateTime: 'yyyy-mm-dd HH:MM:ss Z',
-            singleLine: true,
-          },
-        },
+        transport:
+          process.env.NODE_ENV === 'production'
+            ? undefined
+            : {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  translateTime: 'yyyy-mm-dd HH:MM:ss Z',
+                  singleLine: true,
+                },
+              },
       },
     }),
   ],

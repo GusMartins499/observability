@@ -1,0 +1,2 @@
+# MinIO runtime data (buckets, chunks, .minio.sys) — not source
+/minio_data/

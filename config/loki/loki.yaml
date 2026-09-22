@@ -25,7 +25,7 @@ schema_config:
         period: 24h
 
 limits_config:
-  discover_log_levels: false
+  discover_log_levels: true
 
 common:
   path_prefix: /loki

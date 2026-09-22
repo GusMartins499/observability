@@ -5,11 +5,15 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  app.useLogger(logger);
 
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
-  app.get(Logger).log(`aplicação subiu na porta ${port}`);
+  logger.log(
+    { port, env: process.env.NODE_ENV ?? 'development' },
+    'aplicação subiu',
+  );
 }
 
 bootstrap().catch((err) => {

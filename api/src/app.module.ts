@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+import { randomUUID } from 'node:crypto';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -7,7 +8,21 @@ import { AppService } from './app.service';
   imports: [
     LoggerModule.forRoot({
       pinoHttp: {
-        level: 'debug',
+        level: process.env.LOG_LEVEL ?? 'debug',
+        genReqId: (req, res) => {
+          const id = (req.headers['x-request-id'] as string) ?? randomUUID();
+          res.setHeader('x-request-id', id);
+          return id;
+        },
+        customProps: (req) => ({
+          service: 'api-service',
+          route: req.url,
+        }),
+        customLogLevel: (req, res, err) => {
+          if (err || res.statusCode >= 500) return 'error';
+          if (res.statusCode >= 400) return 'warn';
+          return 'info';
+        },
         transport:
           process.env.NODE_ENV === 'production'
             ? undefined

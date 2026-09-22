@@ -1,6 +1,6 @@
 import './tracer';
 import { NestFactory } from '@nestjs/core';
-import { Logger } from 'nestjs-pino';
+import { Logger, PinoLogger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,9 +10,10 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
-  logger.log(
+  const pinoLogger = await app.resolve(PinoLogger);
+  pinoLogger.info(
     { port, env: process.env.NODE_ENV ?? 'development' },
-    'aplicação subiu',
+    'aplicação 1 subiu',
   );
 }
 

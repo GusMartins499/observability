@@ -3,6 +3,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { randomUUID } from 'node:crypto';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AppService } from './app.service';
               },
       },
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
